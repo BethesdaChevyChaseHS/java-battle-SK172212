@@ -7,7 +7,21 @@ public class MyRobot extends Robot{
         // Health: 3, Speed: 3, Attack Speed: 2, Projectile Strength: 2
         // Total = 10
         // Image name is "myRobotImage.png"
-    }
+}
+
+public void shoot(ArrayList<Robot> robots){
+    if(canAttack()){
+            for(Robot robot : robots) {
+                if (robot != this && robot.isAlive() ){
+                    shootAtLocation(robot.getX() + Utilities.ROBOT_SIZE/2, robot.getY() + Utilities.ROBOT_SIZE/2);
+                    break; // Shoot at the first target found
+                }
+            }
+        }
+}
+
+
+    
 
     public void think(ArrayList<Robot> robots, ArrayList<Projectile> projectiles, Map map, ArrayList<PowerUp> powerups) {
        /* Implement your robot's logic here
@@ -23,5 +37,57 @@ public class MyRobot extends Robot{
          only shoot when canAttack() is true!
         */
        // System.out.println("Thinking...");
+        Robot enemy = null;
+       for(Robot robot : robots){
+            if(robot.getName().equals("Rock") || robot.getName().equals("Rando")){
+                 enemy = robot;
+            }
+       }
+
+       while(true){
+       int robotCol = this.getX() / Utilities.TILE_SIZE;
+       int robotRow = this.getY() / Utilities.TILE_SIZE;
+       if(enemy != null){
+         if(this.getX()<enemy.getX() && map.getTiles()[robotRow][robotCol+1] != Utilities.WALL){
+            xMovement =1;
+            shoot(robots);
+            break;
+         }
+        else{
+            if(this.getY() < enemy.getY() && map.getTiles()[robotRow+1][robotCol] != Utilities.WALL){
+                yMovement =1;
+                shoot(robots);
+                break;
+            }
+            else if(this.getY() > enemy.getY() && map.getTiles()[robotRow-1][robotCol] != Utilities.WALL){
+                yMovement =-1;
+                shoot(robots);
+                break;
+            }
+       }   
+      
+         
+         if(this.getX()>enemy.getX() && map.getTiles()[robotRow][robotCol-1] != Utilities.WALL){
+            xMovement =-1;
+            shoot(robots);
+            break;
+         }
+         else{
+            if(this.getY() < enemy.getY() && map.getTiles()[robotRow+1][robotCol] != Utilities.WALL){
+                yMovement =1;
+                shoot(robots);
+                break;
+            }
+            else if(this.getY() > enemy.getY() && map.getTiles()[robotRow-1][robotCol] != Utilities.WALL){
+                yMovement =-1;
+                shoot(robots);
+                break;
+            }
+         }
+        }
     }
-}
+    }
+    }
+       
+       
+
